@@ -9,5 +9,5 @@ To achieve the objective, the project focuses on the following key requirements:
 - Normalization: Apply normalization techniques to standardize the input data from different sensors. This improves model performance and stability during training.
 
 ### 2.Model Architecture and Training:
-- Utilize deep learning models suited for segmentation tasks which is U-Net.It is effective for pixel-level classification and will be trained to segment water bodies from the input multispectral and optical data.
-- Using DeepLabv3 architecture. To handle the problem of segmenting objects at multiple scales.
+Model selection: Utilize deep learning models suited for segmentation tasks which is U-Net.It is effective for pixel-level classification and will be trained to segment water bodies from the input multispectral and optical data.
+
