@@ -1,0 +1,55 @@
+import cv2
+import os
+import time
+
+def capture_face_images(user_id, save_path='/home/mona/Face recognition/database', num_images=5):
+    os.makedirs(save_path, exist_ok=True)
+    user_folder = os.path.join(save_path, str(user_id))
+    os.makedirs(user_folder, exist_ok=True)
+    
+    cap = cv2.VideoCapture(0)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    
+    instructions = [
+        "Look straight at the camera",
+        "Turn your head slightly to the right",
+        "Turn your head slightly to the left",
+        "Look up slightly",
+        "Look down slightly"
+    ]
+    
+    count = 0
+    while count < num_images:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to capture image. Exiting...")
+            break
+        
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(100, 100))
+        
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            face = frame[y:y + h, x:x + w]
+            
+            if count < len(instructions):
+                text = instructions[count]
+                cv2.putText(frame, text, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                cv2.putText(frame, "Press 'c' to capture", (50, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+            
+            cv2.imshow("Face Registration", frame)
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('c'):  # Press 'c' to capture
+                img_path = os.path.join(user_folder, f"face_{count}.jpg")
+                cv2.imwrite(img_path, face)
+                print(f"Image {count + 1}/{num_images} captured: {img_path}")
+                count += 1
+                time.sleep(1)
+    
+    cap.release()
+    cv2.destroyAllWindows()
+    print("Face registration complete!")
+
+# Example usage
+user_id = input("Enter user ID: ")
+capture_face_images(user_id)
